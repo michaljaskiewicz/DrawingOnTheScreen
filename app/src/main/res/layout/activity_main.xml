@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dev.jaskiewicz.drawingonthescreen.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/main_activity_button_red"
+            style="@style/ButtonStyle"
+            android:background="@color/red"/>
+
+        <Button
+            android:id="@+id/main_activity_button_yellow"
+            style="@style/ButtonStyle"
+            android:background="@color/yellow"/>
+
+        <Button
+            android:id="@+id/main_activity_button_blue"
+            style="@style/ButtonStyle"
+            android:background="@color/blue"/>
+
+        <Button
+            android:id="@+id/main_activity_button_green"
+            style="@style/ButtonStyle"
+            android:background="@color/green"/>
+
+        <Button
+            android:id="@+id/main_activity_button_clear"
+            style="@style/ButtonStyle"
+            android:background="@color/gray"
+            android:text="X"
+            android:textSize="32sp"/>
+    </LinearLayout>
+
+</LinearLayout>
