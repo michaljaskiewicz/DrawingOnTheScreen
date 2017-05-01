@@ -12,12 +12,12 @@ import android.view.View;
 
 public class DrawingView extends View {
 
+    private static final int DEFAULT_PAINT_COLOR = 0xFF000000;
+    private static final int SMALL_CIRCLE_RADIUS = 15;
     private Canvas canvas;
     private Bitmap canvasBitmap;
-    private Path path;
-    private Paint canvasPaint;
+    private Path pathToDraw;
     private Paint paint;
-    private int defaultPaintColor = 0xFF000000;
 
 
     public DrawingView(Context context, AttributeSet attrs) {
@@ -26,29 +26,43 @@ public class DrawingView extends View {
     }
 
     private void setupDrawing() {
-        path = new Path();
-        paint = new Paint();
-        paint.setColor(defaultPaintColor);
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(20);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        canvasPaint = new Paint(Paint.DITHER_FLAG);
+        createPathToDraw();
+        setupPaint();
     }
 
+    private void createPathToDraw() {
+        pathToDraw = new Path();
+    }
+
+    private void setupPaint() {
+        paint = new Paint();
+        paint.setColor(DEFAULT_PAINT_COLOR);
+        paint.setStrokeWidth(5);
+        paint.setStyle(Paint.Style.STROKE);
+    }
+
+    /**
+     * Metoda wywoywana jest za każdym razem, gdy zmieni się rozmiar widoku
+     * Wywoływana jest także po utworzeniu widoku
+     *
+     * Tworzę tutaj bitmapę oraz powiązany z nią obiekt Canvas
+     */
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight);
+        canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(canvasBitmap);
     }
 
+    /**
+     * Metoda wywoływana po każdym wystąpieniu invalidate()
+     * Rysuje nową ścieżkę na istniejącej już bitmapie
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
-        canvas.drawPath(path, paint);
+        canvas.drawBitmap(canvasBitmap, 0, 0, null);
+        canvas.drawPath(pathToDraw, paint);
     }
 
     @Override
@@ -58,14 +72,16 @@ public class DrawingView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                path.moveTo(touchX, touchY);
+                pathToDraw.moveTo(touchX, touchY);
+                drawCircleOnBitmap(touchX, touchY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                path.lineTo(touchX, touchY);
+                pathToDraw.lineTo(touchX, touchY);
                 break;
             case MotionEvent.ACTION_UP:
-                canvas.drawPath(path, paint);
-                path.reset();
+                canvas.drawPath(pathToDraw, paint);
+                pathToDraw.reset();
+                drawCircleOnBitmap(touchX, touchY);
                 break;
             default:
                 return false;
@@ -74,11 +90,19 @@ public class DrawingView extends View {
         return true;
     }
 
+    private void drawCircleOnBitmap(float positionX, float positionY) {
+        canvas.drawCircle(positionX, positionY, SMALL_CIRCLE_RADIUS, paint);
+    }
+
     public void setPaintColor(int color) {
         paint.setColor(color);
     }
 
     public void clear() {
+        drawWhiteBackgroundOnCanvas();
+    }
 
+    private void drawWhiteBackgroundOnCanvas() {
+        canvas.drawARGB(255, 255, 255, 255);
     }
 }

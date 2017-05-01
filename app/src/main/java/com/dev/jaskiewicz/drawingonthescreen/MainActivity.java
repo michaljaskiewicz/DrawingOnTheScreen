@@ -79,6 +79,4 @@ public class MainActivity extends AppCompatActivity {
     private int getColorFromResource(int colorResourceID) {
         return ContextCompat.getColor(MainActivity.this, colorResourceID);
     }
-
-
 }
