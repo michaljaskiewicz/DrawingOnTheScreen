@@ -104,5 +104,6 @@ public class DrawingView extends View {
 
     private void drawWhiteBackgroundOnCanvas() {
         canvas.drawARGB(255, 255, 255, 255);
+        invalidate();
     }
 }
